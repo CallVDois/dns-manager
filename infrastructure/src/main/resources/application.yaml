@@ -4,3 +4,6 @@ server:
 spring:
   application:
     name: infrastructure
+
+a-dns-list: ${A_DNS_LIST}
+aaaa-dns-list: ${AAAA_DNS_LIST}

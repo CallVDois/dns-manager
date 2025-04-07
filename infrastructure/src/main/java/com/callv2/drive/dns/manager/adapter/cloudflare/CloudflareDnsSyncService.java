@@ -1,4 +1,4 @@
-package com.callv2.drive.dns.manager.cloudflare;
+package com.callv2.drive.dns.manager.adapter.cloudflare;
 
 import java.util.Map;
 
@@ -9,7 +9,7 @@ import com.callv2.dns.manager.domain.dns.DNS;
 import com.callv2.dns.manager.domain.ip.IP;
 import com.callv2.dns.manager.domain.ip.PublicIPRetriever;
 import com.callv2.dns.manager.domain.ip.Type;
-import com.callv2.drive.dns.manager.cloudflare.model.ListDNSResponse;
+import com.callv2.drive.dns.manager.adapter.cloudflare.model.ListDNSResponse;
 
 public class CloudflareDnsSyncService extends DnsSyncService {
 

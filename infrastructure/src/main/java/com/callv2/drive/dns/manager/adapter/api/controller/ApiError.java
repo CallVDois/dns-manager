@@ -1,4 +1,4 @@
-package com.callv2.drive.dns.manager.api.controller;
+package com.callv2.drive.dns.manager.adapter.api.controller;
 
 public record ApiError(String message) {
 

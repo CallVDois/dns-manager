@@ -1,4 +1,4 @@
-package com.callv2.drive.dns.manager.cloudflare.model;
+package com.callv2.drive.dns.manager.adapter.cloudflare.model;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.callv2.drive.dns.manager.api.controller;
+package com.callv2.drive.dns.manager.adapter.api.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

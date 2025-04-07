@@ -2,6 +2,3 @@ cloudflare:
   api:
     token: ${CLOUDFLARE_API_TOKEN}
     zoneId: ${CLOUDFLARE_ZONE_ID}
-
-  services:
-    - dnsName: domain.com

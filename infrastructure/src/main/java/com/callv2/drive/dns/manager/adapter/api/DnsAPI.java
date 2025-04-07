@@ -1,7 +1,11 @@
-package com.callv2.drive.dns.manager.api;
+package com.callv2.drive.dns.manager.adapter.api;
+
+import java.util.List;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.callv2.drive.dns.manager.adapter.dns.model.UpdateDNSRequest;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -10,6 +14,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public interface DnsAPI {
 
     @PostMapping("force-update")
-    void forceUpdate();
+    void forceUpdate(final List<UpdateDNSRequest> dnsList);
 
 }
