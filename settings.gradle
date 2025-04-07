@@ -1,4 +1,1 @@
-rootProject.name = 'dns'
-include 'app'
-include 'domain'
-include 'infrastructure'
+rootProject.name = 'manager'

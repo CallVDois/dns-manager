@@ -1,0 +1,4 @@
+cloudflare:
+  api:
+    token: ${CLOUDFLARE_API_TOKEN:api_token}
+    zoneId: ${CLOUDFLARE_ZONE_ID:zone_id}

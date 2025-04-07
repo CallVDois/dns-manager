@@ -1,0 +1,12 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: ${PROFILE_ACTIVE:cloudflare}
+
+  application:
+    name: infrastructure
+
+a-dns-list: ${A_DNS_LIST:}
+aaaa-dns-list: ${AAAA_DNS_LIST:}
