@@ -33,7 +33,8 @@ public class SynchronizeDNSUseCase extends UnitUseCase<SynchronizeDNSInput> {
         if (currentPublicIP.equals(currentIP))
             return;
 
-        this.dnsGateway.updateIP(dns, currentIP);
+        this.ipGateway.updateCurrentIP(currentPublicIP);
+        this.dnsGateway.updateIP(dns, currentPublicIP);
     }
 
 }

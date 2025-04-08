@@ -14,10 +14,10 @@ public final class InMemoryIPRepository {
 
     public IP updateIP(final IP ip) {
 
-        if (IP.Type.IPV4.equals(ipv4.type()))
+        if (IP.Type.IPV4.equals(ip.type()))
             return InMemoryIPRepository.ipv4 = ip;
 
-        if (IP.Type.IPV6.equals(ipv6.type()))
+        if (IP.Type.IPV6.equals(ip.type()))
             return InMemoryIPRepository.ipv6 = ip;
 
         throw new RuntimeException("Invalid IP Type");
@@ -25,10 +25,10 @@ public final class InMemoryIPRepository {
 
     public Optional<IP> findIP(final IP.Type type) {
 
-        if (IP.Type.IPV4.equals(ipv4.type()))
+        if (IP.Type.IPV4.equals(type))
             return Optional.ofNullable(InMemoryIPRepository.ipv4);
 
-        if (IP.Type.IPV6.equals(ipv6.type()))
+        if (IP.Type.IPV6.equals(type))
             return Optional.ofNullable(InMemoryIPRepository.ipv6);
 
         throw new RuntimeException("Invalid IP Type");

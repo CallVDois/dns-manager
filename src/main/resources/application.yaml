@@ -6,7 +6,17 @@ spring:
     active: ${PROFILE_ACTIVE:cloudflare}
 
   application:
-    name: infrastructure
+    name: dns-manager
 
+# List comma separated domains from A type
+# example: example.com,example.org
 a-dns-list: ${A_DNS_LIST:}
+
+# List comma separated domains from AAAA type
+# example: example.com,example.org
 aaaa-dns-list: ${AAAA_DNS_LIST:}
+
+# The default value is 600000 milliseconds (10 minutes)
+dns:
+  update:
+    delay: ${DNS_UPDATE_DELAY:600000}

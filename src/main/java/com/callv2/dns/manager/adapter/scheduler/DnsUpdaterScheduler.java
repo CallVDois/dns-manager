@@ -25,7 +25,7 @@ public class DnsUpdaterScheduler {
         this.synchronizeDNSUseCase = synchronizeDNSUseCase;
     }
 
-    @Scheduled(fixedDelay = 600000)
+    @Scheduled(fixedDelayString = "${dns.update.delay}")
     public void updateDns() {
         for (DNS dns : dnsList)
             synchronizeDNSUseCase.execute(new SynchronizeDNSInput(dns.value(), dns.type()));
