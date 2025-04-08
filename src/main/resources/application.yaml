@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 80
 
 spring:
   profiles:
@@ -19,4 +19,4 @@ aaaa-dns-list: ${AAAA_DNS_LIST:}
 # The default value is 600000 milliseconds (10 minutes)
 dns:
   update:
-    delay: ${DNS_UPDATE_DELAY:600000}
+    delay: ${DNS_UPDATE_DELAY_MS:600000}
