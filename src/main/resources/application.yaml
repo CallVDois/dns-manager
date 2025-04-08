@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: ${PROFILE_ACTIVE:cloudflare}
+    active: ${DNS_PROVIDER:cloudflare}
 
   application:
     name: dns-manager
