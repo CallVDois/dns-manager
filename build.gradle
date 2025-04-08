@@ -5,7 +5,11 @@ plugins {
 }
 
 group = 'com.callv2.dns'
-version = 'latest'
+
+bootJar {
+    archiveFileName = 'application.jar'
+    destinationDirectory = file("${rootProject.buildDir}/libs")
+}
 
 java {
 	toolchain {
