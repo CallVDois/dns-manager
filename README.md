@@ -12,6 +12,7 @@ Below is a list of environment variables required to configure the DNS updater c
 | `DNS_UPDATE_DELAY_MS`     | 600000    | Delay between DNS update checks, in milliseconds.                          | `600000` (10 minutes)            |
 | `A_DNS_LIST`              | empty    | Comma-separated list of `A` (IPv4) DNS records to update.                  | `example.com,www.example.com`    |
 | `AAAA_DNS_LIST`           | empty    | Comma-separated list of `AAAA` (IPv6) DNS records to update.               | `ipv6.example.com`               |
+| `WEBHOOK_URL`           | empty    | Discord webhook URL to receive notifications about DNS updates.               | `https://discord.com/api/webhooks/...`               |
 
 > ⚠️ **Never include secrets like `CLOUDFLARE_API_TOKEN` directly in the Dockerfile.** Use a `.env` file or pass them through your container orchestrator's secret management system (e.g., Docker Compose, Kubernetes, etc.).
 
@@ -30,4 +31,6 @@ DNS_UPDATE_DELAY_MS=600000
 
 A_DNS_LIST=example.com,www.example.com
 AAAA_DNS_LIST=ipv6.example.com
+
+WEBHOOK_URL=your_discord_webhook_url
 
