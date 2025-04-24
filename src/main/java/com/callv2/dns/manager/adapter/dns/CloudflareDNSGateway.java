@@ -1,5 +1,6 @@
 package com.callv2.dns.manager.adapter.dns;
 
+import com.callv2.dns.manager.adapter.notification.DiscordWebhookNotifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -13,14 +14,17 @@ import com.callv2.dns.manager.domain.ip.IP;
 public class CloudflareDNSGateway implements DNSGateway {
 
     private final CloudflareDnsManagerClient cloudflareDnsManagerClient;
+    private final DiscordWebhookNotifier discordWebhookNotifier;
 
-    public CloudflareDNSGateway(final CloudflareDnsManagerClient cloudflareDnsManagerClient) {
+    public CloudflareDNSGateway(final CloudflareDnsManagerClient cloudflareDnsManagerClient, final DiscordWebhookNotifier discordWebhookNotifier) {
         this.cloudflareDnsManagerClient = cloudflareDnsManagerClient;
+        this.discordWebhookNotifier = discordWebhookNotifier;
     }
 
     @Override
     public void updateIP(DNS dns, IP ip) {
         this.cloudflareDnsManagerClient.updateDns(dns.value(), dns.type().getValue(), ip.value());
+        discordWebhookNotifier.sendMessage(String.format("🛠️ Registro DNS `%s` atualizado para o IP `%s`.", dns.value(), ip.value()));
     }
 
 }

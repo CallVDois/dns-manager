@@ -20,3 +20,6 @@ aaaa-dns-list: ${AAAA_DNS_LIST:}
 dns:
   update:
     delay: ${DNS_UPDATE_DELAY_MS:600000}
+
+discord:
+  webhook-url: ${WEBHOOK_URL:}
