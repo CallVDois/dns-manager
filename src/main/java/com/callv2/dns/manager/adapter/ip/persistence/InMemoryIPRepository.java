@@ -4,31 +4,32 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
-import com.callv2.dns.manager.domain.ip.IP;
+import com.callv2.dns.manager.domain.record.Ip;
+import com.callv2.dns.manager.domain.record.IpType;
 
 @Repository
 public final class InMemoryIPRepository {
 
-    private static IP ipv4;
-    private static IP ipv6;
+    private static Ip ipv4;
+    private static Ip ipv6;
 
-    public IP updateIP(final IP ip) {
+    public Ip updateIP(final Ip ip) {
 
-        if (IP.Type.IPV4.equals(ip.type()))
+        if (IpType.IPV4.equals(ip.getType()))
             return InMemoryIPRepository.ipv4 = ip;
 
-        if (IP.Type.IPV6.equals(ip.type()))
+        if (IpType.IPV6.equals(ip.getType()))
             return InMemoryIPRepository.ipv6 = ip;
 
         throw new RuntimeException("Invalid IP Type");
     }
 
-    public Optional<IP> findIP(final IP.Type type) {
+    public Optional<Ip> findIP(final IpType type) {
 
-        if (IP.Type.IPV4.equals(type))
+        if (IpType.IPV4.equals(type))
             return Optional.ofNullable(InMemoryIPRepository.ipv4);
 
-        if (IP.Type.IPV6.equals(type))
+        if (IpType.IPV6.equals(type))
             return Optional.ofNullable(InMemoryIPRepository.ipv6);
 
         throw new RuntimeException("Invalid IP Type");

@@ -1,11 +1,11 @@
 package com.callv2.dns.manager.domain.dns;
 
-import com.callv2.dns.manager.domain.ip.IP;
+import com.callv2.dns.manager.domain.record.Ip;
 
 public interface DNSGateway {
 
     // List<DNS> listAll();
 
-    void updateIP(DNS dns, IP ip);
+    void updateIP(DNS dns, Ip ip);
 
 }

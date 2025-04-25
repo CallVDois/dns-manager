@@ -6,12 +6,12 @@ import org.springframework.stereotype.Component;
 
 import com.callv2.dns.manager.adapter.ip.persistence.InMemoryIPRepository;
 import com.callv2.dns.manager.adapter.ipify.IpifyPublicIPRetriever;
-import com.callv2.dns.manager.domain.ip.IP;
-import com.callv2.dns.manager.domain.ip.IPGateway;
-import com.callv2.dns.manager.domain.ip.IP.Type;
+import com.callv2.dns.manager.domain.record.Ip;
+import com.callv2.dns.manager.domain.record.IpGateway;
+import com.callv2.dns.manager.domain.record.IpType;
 
 @Component
-public class DefaultIPGateway implements IPGateway {
+public class DefaultIPGateway implements IpGateway {
 
     private final IpifyPublicIPRetriever ipRetriever;
     private final InMemoryIPRepository ipRepository;
@@ -24,26 +24,26 @@ public class DefaultIPGateway implements IPGateway {
     }
 
     @Override
-    public IP updateCurrentIP(final IP ip) {
+    public Ip updateCurrentPublicIp(final Ip ip) {
         return this.ipRepository.updateIP(ip);
     }
 
     @Override
-    public Optional<IP> currentPublicIP(final Type type) {
+    public Optional<Ip> currentPublicIp(final IpType type) {
         return this.ipRepository.findIP(type);
     }
 
     @Override
-    public IP discoveryPublicIP(final IP.Type type) {
+    public Ip discoveryPublicIp(final IpType type) {
 
         if (type == null)
             throw new IllegalArgumentException();
 
-        if (IP.Type.IPV4.equals(type))
-            return new IP(ipRetriever.retrievePublicIPV4().ip(), IP.Type.IPV4);
+        if (IpType.IPV4.equals(type))
+            return Ip.fromIpv4(ipRetriever.retrievePublicIPV4().ip());
 
-        if (IP.Type.IPV6.equals(type))
-            return new IP(ipRetriever.retrievePublicIPV6().ip(), IP.Type.IPV6);
+        if (IpType.IPV6.equals(type))
+            return Ip.fromIpv4(ipRetriever.retrievePublicIPV6().ip());
 
         throw new IllegalArgumentException();
     }

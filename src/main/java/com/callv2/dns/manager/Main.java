@@ -1,6 +1,5 @@
 package com.callv2.dns.manager;
 
-import com.callv2.dns.manager.adapter.notification.DiscordWebhookNotifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;

@@ -1,22 +1,22 @@
 package com.callv2.dns.manager.domain.dns;
 
-import com.callv2.dns.manager.domain.ip.IP;
+import com.callv2.dns.manager.domain.record.IpType;
 
 public record DNS(String value, Type type) {
 
     public enum Type {
-        A(IP.Type.IPV4, "A"),
-        AAAA(IP.Type.IPV6, "AAAA");
+        A(IpType.IPV4, "A"),
+        AAAA(IpType.IPV6, "AAAA");
 
-        private final IP.Type ipType;
+        private final IpType ipType;
         private final String value;
 
-        Type(IP.Type ipType, String value) {
+        Type(IpType ipType, String value) {
             this.ipType = ipType;
             this.value = value;
         }
 
-        public IP.Type getIpType() {
+        public IpType getIpType() {
             return ipType;
         }
 
