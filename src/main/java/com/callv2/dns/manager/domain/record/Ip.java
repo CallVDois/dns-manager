@@ -28,7 +28,6 @@ public class Ip extends Entity<IpID> {
     @Override
     public void validate(ValidationHandler handler) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'validate'");
     }
 
     public String getValue() {

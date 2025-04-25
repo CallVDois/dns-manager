@@ -39,12 +39,6 @@ public class DefaultRecordGateway implements DnsRecordGateway {
                 record.getIp().getValue());
 
         this.inMemoryDnsRecordRepository.save(record);
-
-        // TODO remove from here
-        // discordWebhookNotifier.sendMessage(
-        // String.format("🛠️ Registro DNS `%s` atualizado para o IP `%s`.",
-        // record.getName().value(),
-        // record.getIp().getValue()));
     }
 
 }
