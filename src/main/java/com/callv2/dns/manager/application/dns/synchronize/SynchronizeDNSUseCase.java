@@ -1,10 +1,15 @@
 package com.callv2.dns.manager.application.dns.synchronize;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
 import com.callv2.dns.manager.application.UnitUseCase;
-import com.callv2.dns.manager.domain.dns.DNS;
-import com.callv2.dns.manager.domain.dns.DNSGateway;
+import com.callv2.dns.manager.domain.event.Event;
+import com.callv2.dns.manager.domain.record.DnsRecord;
+import com.callv2.dns.manager.domain.record.DnsRecordGateway;
+import com.callv2.dns.manager.domain.record.DnsRecordID;
+import com.callv2.dns.manager.domain.record.DnsRecordName;
 import com.callv2.dns.manager.domain.record.Ip;
 import com.callv2.dns.manager.domain.record.IpGateway;
 import com.callv2.dns.manager.domain.record.IpType;
@@ -13,29 +18,36 @@ import com.callv2.dns.manager.domain.record.IpType;
 public class SynchronizeDNSUseCase extends UnitUseCase<SynchronizeDNSInput> {
 
     private final IpGateway ipGateway;
-    private final DNSGateway dnsGateway;
+    private final DnsRecordGateway dnsRecordGateway;
 
     public SynchronizeDNSUseCase(
             final IpGateway ipGateway,
-            final DNSGateway dnsGateway) {
+            final DnsRecordGateway dnsRecordGateway) {
         this.ipGateway = ipGateway;
-        this.dnsGateway = dnsGateway;
+        this.dnsRecordGateway = dnsRecordGateway;
     }
 
     @Override
     public void execute(final SynchronizeDNSInput input) {
 
-        final DNS dns = new DNS(input.dns(), input.type());
-
         final IpType ipType = input.type().getIpType();
-        final Ip currentPublicIP = this.ipGateway.discoveryPublicIp(ipType);
-        final Ip currentIP = this.ipGateway.currentPublicIp(ipType).orElse(null);
+        final Ip currentPublicIP = this.ipGateway.findPublicIp(ipType);
 
-        if (currentPublicIP.equals(currentIP))
+        final DnsRecord dnsRecord = this.dnsRecordGateway
+                .findById(DnsRecordID.from(DnsRecordName.of(input.dns()), input.type()))
+                .orElseThrow(() -> new IllegalArgumentException("DnsRecord not found"));
+
+        if (dnsRecord.getIp().equals(currentPublicIP))
             return;
 
-        this.ipGateway.updateCurrentPublicIp(currentPublicIP);
-        this.dnsGateway.updateIP(dns, currentPublicIP);
+        this.dnsRecordGateway.update(dnsRecord.changeIp(currentPublicIP));
+
+        Optional<Event<?>> event = dnsRecord.dequeueEvent();
+        while (event.isPresent()) {
+            event.get(); // Dispatch event
+            event = dnsRecord.dequeueEvent();
+        }
+
     }
 
 }

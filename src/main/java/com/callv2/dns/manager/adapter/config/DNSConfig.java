@@ -9,17 +9,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.callv2.dns.manager.domain.dns.DNS;
-
 @Configuration
 public class DNSConfig {
 
     @Bean
-    List<DNS> dnsList(
-            @Value("${a-dns-list}") String adDnsList,
-            @Value("${aaaa-dns-list}") String aaaadDnsList) {
+    List<String> ipv4DnsList(@Value("${a-dns-list}") String adDnsList) {
 
-        final ArrayList<DNS> dnsList = new ArrayList<>();
+        final ArrayList<String> dnsList = new ArrayList<>();
+
         if (adDnsList != null)
             dnsList
                     .addAll(Arrays.asList(Objects.requireNonNull(adDnsList)
@@ -28,8 +25,16 @@ public class DNSConfig {
                             .stream()
                             .filter(dns -> dns != null)
                             .filter(dns -> !dns.isBlank())
-                            .map(dns -> new DNS(dns, DNS.Type.A))
                             .toList());
+
+        return List.copyOf(dnsList);
+    }
+
+    @Bean
+    List<String> ipv6DnsList(@Value("${aaaa-dns-list}") String aaaadDnsList) {
+
+        final ArrayList<String> dnsList = new ArrayList<>();
+
         if (aaaadDnsList != null)
             dnsList
                     .addAll(Arrays.asList(Objects.requireNonNull(aaaadDnsList)
@@ -38,7 +43,6 @@ public class DNSConfig {
                             .stream()
                             .filter(dns -> dns != null)
                             .filter(dns -> !dns.isBlank())
-                            .map(dns -> new DNS(dns, DNS.Type.AAAA))
                             .toList());
 
         return List.copyOf(dnsList);
