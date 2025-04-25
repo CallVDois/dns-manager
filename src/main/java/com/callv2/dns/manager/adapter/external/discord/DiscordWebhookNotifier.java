@@ -1,13 +1,12 @@
-package com.callv2.dns.manager.adapter.notification;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+package com.callv2.dns.manager.adapter.external.discord;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 @Component
 public class DiscordWebhookNotifier {
@@ -19,7 +18,8 @@ public class DiscordWebhookNotifier {
     }
 
     public void sendMessage(String message) {
-        if (!isValidDiscordWebhookUrl(webhookUrl)) return;
+        if (!isValidDiscordWebhookUrl(webhookUrl))
+            return;
 
         try {
             HttpURLConnection connection = openConnection(webhookUrl);

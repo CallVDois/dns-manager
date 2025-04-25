@@ -1,11 +1,9 @@
-package com.callv2.dns.manager.application.dns.synchronize;
-
-import java.util.Optional;
+package com.callv2.dns.manager.application.record.synchronize;
 
 import org.springframework.stereotype.Component;
 
 import com.callv2.dns.manager.application.UnitUseCase;
-import com.callv2.dns.manager.domain.event.Event;
+import com.callv2.dns.manager.domain.event.EventDispatcher;
 import com.callv2.dns.manager.domain.record.DnsRecord;
 import com.callv2.dns.manager.domain.record.DnsRecordGateway;
 import com.callv2.dns.manager.domain.record.DnsRecordID;
@@ -15,20 +13,24 @@ import com.callv2.dns.manager.domain.record.IpGateway;
 import com.callv2.dns.manager.domain.record.IpType;
 
 @Component
-public class SynchronizeDNSUseCase extends UnitUseCase<SynchronizeDNSInput> {
+public class SynchronizeDnsRecordUseCase extends UnitUseCase<SynchronizeDnsRecordInput> {
 
     private final IpGateway ipGateway;
     private final DnsRecordGateway dnsRecordGateway;
 
-    public SynchronizeDNSUseCase(
+    private final EventDispatcher eventDispatcher;
+
+    public SynchronizeDnsRecordUseCase(
             final IpGateway ipGateway,
-            final DnsRecordGateway dnsRecordGateway) {
+            final DnsRecordGateway dnsRecordGateway,
+            final EventDispatcher eventDispatcher) {
         this.ipGateway = ipGateway;
         this.dnsRecordGateway = dnsRecordGateway;
+        this.eventDispatcher = eventDispatcher;
     }
 
     @Override
-    public void execute(final SynchronizeDNSInput input) {
+    public void execute(final SynchronizeDnsRecordInput input) {
 
         final IpType ipType = input.type().getIpType();
         final Ip currentPublicIP = this.ipGateway.findPublicIp(ipType);
@@ -41,13 +43,7 @@ public class SynchronizeDNSUseCase extends UnitUseCase<SynchronizeDNSInput> {
             return;
 
         this.dnsRecordGateway.update(dnsRecord.changeIp(currentPublicIP));
-
-        Optional<Event<?>> event = dnsRecord.dequeueEvent();
-        while (event.isPresent()) {
-            event.get(); // Dispatch event
-            event = dnsRecord.dequeueEvent();
-        }
-
+        eventDispatcher.notify(dnsRecord);
     }
 
 }

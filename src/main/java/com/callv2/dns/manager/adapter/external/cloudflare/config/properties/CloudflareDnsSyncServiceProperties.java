@@ -1,4 +1,4 @@
-package com.callv2.dns.manager.adapter.cloudflare.config.properties;
+package com.callv2.dns.manager.adapter.external.cloudflare.config.properties;
 
 import java.util.List;
 

@@ -1,9 +1,9 @@
-package com.callv2.dns.manager.adapter.ipify;
+package com.callv2.dns.manager.adapter.external.ipify;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.callv2.dns.manager.adapter.ipify.model.IPResponse;
+import com.callv2.dns.manager.adapter.external.ipify.model.IPResponse;
 
 @Component
 public class IpifyPublicIPRetriever {

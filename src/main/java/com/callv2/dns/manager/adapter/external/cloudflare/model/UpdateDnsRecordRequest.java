@@ -1,4 +1,4 @@
-package com.callv2.dns.manager.adapter.cloudflare.model;
+package com.callv2.dns.manager.adapter.external.cloudflare.model;
 
 import java.util.List;
 

@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 
 import com.callv2.dns.manager.adapter.api.DnsAPI;
-import com.callv2.dns.manager.adapter.dns.adapter.DNSAdapter;
-import com.callv2.dns.manager.adapter.dns.model.UpdateDNSRequest;
-import com.callv2.dns.manager.application.dns.synchronize.SynchronizeDNSUseCase;
+import com.callv2.dns.manager.adapter.record.adapter.DnsRecordAdapter;
+import com.callv2.dns.manager.adapter.record.model.UpdateDnsRecordRequest;
+import com.callv2.dns.manager.application.record.synchronize.SynchronizeDnsRecordUseCase;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,16 +15,16 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class DnsController implements DnsAPI {
 
-    private final SynchronizeDNSUseCase synchronizeDNSUseCase;
+    private final SynchronizeDnsRecordUseCase synchronizeDNSUseCase;
 
-    public DnsController(final SynchronizeDNSUseCase synchronizeDNSUseCase) {
+    public DnsController(final SynchronizeDnsRecordUseCase synchronizeDNSUseCase) {
         this.synchronizeDNSUseCase = synchronizeDNSUseCase;
     }
 
     @Override
-    public void forceUpdate(final List<UpdateDNSRequest> dnsList) {
-        for (UpdateDNSRequest updateDNSRequest : dnsList)
-            synchronizeDNSUseCase.execute(DNSAdapter.adapt(updateDNSRequest));
+    public void forceUpdate(final List<UpdateDnsRecordRequest> dnsList) {
+        for (UpdateDnsRecordRequest updateDNSRequest : dnsList)
+            synchronizeDNSUseCase.execute(DnsRecordAdapter.adapt(updateDNSRequest));
     }
 
 }

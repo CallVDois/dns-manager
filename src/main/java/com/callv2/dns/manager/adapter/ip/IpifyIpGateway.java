@@ -2,7 +2,7 @@ package com.callv2.dns.manager.adapter.ip;
 
 import org.springframework.stereotype.Component;
 
-import com.callv2.dns.manager.adapter.ipify.IpifyPublicIPRetriever;
+import com.callv2.dns.manager.adapter.external.ipify.IpifyPublicIPRetriever;
 import com.callv2.dns.manager.domain.record.Ip;
 import com.callv2.dns.manager.domain.record.IpGateway;
 import com.callv2.dns.manager.domain.record.IpType;

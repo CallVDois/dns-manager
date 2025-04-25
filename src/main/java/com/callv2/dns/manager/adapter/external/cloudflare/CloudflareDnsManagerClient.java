@@ -1,10 +1,10 @@
-package com.callv2.dns.manager.adapter.cloudflare;
+package com.callv2.dns.manager.adapter.external.cloudflare;
 
 import java.util.Map;
 
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.callv2.dns.manager.adapter.cloudflare.model.ListDNSResponse;
+import com.callv2.dns.manager.adapter.external.cloudflare.model.ListDNSResponse;
 
 public class CloudflareDnsManagerClient {
 

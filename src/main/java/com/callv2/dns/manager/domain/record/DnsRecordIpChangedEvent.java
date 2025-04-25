@@ -5,13 +5,13 @@ import java.util.UUID;
 
 import com.callv2.dns.manager.domain.event.Event;
 
-public record DnsRecordChangedEvent(
+public record DnsRecordIpChangedEvent(
         String id,
         String source,
-        DnsRecordChangedEvent.Data data,
-        Instant generatedAt) implements Event<DnsRecordChangedEvent.Data> {
+        DnsRecordIpChangedEvent.Data data,
+        Instant generatedAt) implements Event<DnsRecordIpChangedEvent.Data> {
 
-    private static final String NAME = "record.changed";
+    private static final String NAME = "record.ip.changed";
 
     @Override
     public String name() {
@@ -30,8 +30,8 @@ public record DnsRecordChangedEvent(
 
     }
 
-    public static DnsRecordChangedEvent create(final String source, final DnsRecordChangedEvent.Data data) {
-        return new DnsRecordChangedEvent(UUID.randomUUID().toString(), source, data, Instant.now());
+    public static DnsRecordIpChangedEvent create(final String source, final DnsRecordIpChangedEvent.Data data) {
+        return new DnsRecordIpChangedEvent(UUID.randomUUID().toString(), source, data, Instant.now());
     }
 
 }

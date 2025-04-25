@@ -1,27 +1,43 @@
 package com.callv2.dns.manager.domain.event;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class EventDispatcher {
 
-    // private final EventBus eventBus;
+    private final ConcurrentHashMap<String, List<EventHandler<?>>> handlers = new ConcurrentHashMap<>();
 
-    // public EventDispatcher(EventBus eventBus) {
-    //     this.eventBus = eventBus;
-    // }
+    public void register(final Event<?> event, final EventHandler<?> handler) {
+        this.handlers.computeIfAbsent(event.name(), k -> List.of()).add(handler);
+    }
 
-    // public void dispatch(final Event<?> event) {
-    //     this.eventBus.dispatch(event);
-    // }
+    public void unregister(final Event<?> event, final EventHandler<?> handler) {
+        this.handlers.computeIfPresent(event.name(), (k, v) -> {
+            v.remove(handler);
+            return v.isEmpty() ? null : v;
+        });
+    }
 
-    // public void register(final String topic, final EventHandler handler) {
-    //     this.eventBus.register(topic, handler);
-    // }
+    public void unregisterAll(final String eventName) {
+        this.handlers.remove(eventName);
+    }
 
-    // public void unregister(final String topic, final EventHandler handler) {
-    //     this.eventBus.unregister(topic, handler);
-    // }
+    public <D> void notify(final Event<D> event) {
+        @SuppressWarnings("unchecked")
+        final List<EventHandler<D>> handlers = (List<EventHandler<D>>) Optional
+                .ofNullable(this.handlers.get(event.name()))
+                .filter(h -> !h.isEmpty())
+                .map(h -> (List<EventHandler<D>>) (List<?>) h)
+                .orElse(List.of());
 
-    // public void unregisterAll(final String topic) {
-    //     this.eventBus.unregisterAll(topic);
-    // }
+        handlers.forEach(handler -> handler.handle(event));
+    }
+
+    public void notify(final EventCarrier carrier) {
+        var event = carrier.dequeueEvent();
+        while (event.isPresent())
+            notify(event.get());
+    }
 
 }

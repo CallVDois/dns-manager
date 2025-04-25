@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.callv2.dns.manager.application.dns.synchronize.SynchronizeDNSInput;
-import com.callv2.dns.manager.application.dns.synchronize.SynchronizeDNSUseCase;
+import com.callv2.dns.manager.application.record.synchronize.SynchronizeDnsRecordInput;
+import com.callv2.dns.manager.application.record.synchronize.SynchronizeDnsRecordUseCase;
 import com.callv2.dns.manager.domain.record.DnsRecordType;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +18,12 @@ public class DnsUpdaterScheduler {
     private final List<String> ipv4DnsList;
     private final List<String> ipv6DnsList;
 
-    private final SynchronizeDNSUseCase synchronizeDNSUseCase;
+    private final SynchronizeDnsRecordUseCase synchronizeDNSUseCase;
 
     public DnsUpdaterScheduler(
             final List<String> ipv4DnsList,
             final List<String> ipv6DnsList,
-            final SynchronizeDNSUseCase synchronizeDNSUseCase) {
+            final SynchronizeDnsRecordUseCase synchronizeDNSUseCase) {
         this.ipv4DnsList = ipv4DnsList;
         this.ipv6DnsList = ipv6DnsList;
         this.synchronizeDNSUseCase = synchronizeDNSUseCase;
@@ -33,10 +33,10 @@ public class DnsUpdaterScheduler {
     public void updateDns() {
 
         for (String dns : ipv4DnsList)
-            synchronizeDNSUseCase.execute(new SynchronizeDNSInput(dns, DnsRecordType.A));
+            synchronizeDNSUseCase.execute(new SynchronizeDnsRecordInput(dns, DnsRecordType.A));
 
         for (String dns : ipv6DnsList)
-            synchronizeDNSUseCase.execute(new SynchronizeDNSInput(dns, DnsRecordType.AAAA));
+            synchronizeDNSUseCase.execute(new SynchronizeDnsRecordInput(dns, DnsRecordType.AAAA));
 
     }
 }

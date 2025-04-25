@@ -82,9 +82,9 @@ public class DnsRecord extends AggregateRoot<DnsRecordID> implements EventCarrie
         this.updatedAt = Instant.now();
 
         this.events.add(
-                DnsRecordChangedEvent.create(
+                DnsRecordIpChangedEvent.create(
                         "dns.manager",
-                        DnsRecordChangedEvent.Data.of(
+                        DnsRecordIpChangedEvent.Data.of(
                                 this.getName().value(),
                                 this.getType().getValue(),
                                 this.getIp().getValue(),
