@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DNSConfig {
 
-    @Bean
+    @Bean("ipv4DnsList")
     List<String> ipv4DnsList(@Value("${a-dns-list}") String adDnsList) {
 
         final ArrayList<String> dnsList = new ArrayList<>();
@@ -30,7 +30,7 @@ public class DNSConfig {
         return List.copyOf(dnsList);
     }
 
-    @Bean
+    @Bean("ipv6DnsList")
     List<String> ipv6DnsList(@Value("${aaaa-dns-list}") String aaaadDnsList) {
 
         final ArrayList<String> dnsList = new ArrayList<>();

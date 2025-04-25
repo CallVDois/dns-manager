@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Queue;
 
 import com.callv2.dns.manager.domain.AggregateRoot;
+import com.callv2.dns.manager.domain.common.event.ErrorOccurredEvent;
 import com.callv2.dns.manager.domain.event.Event;
 import com.callv2.dns.manager.domain.event.EventCarrier;
 import com.callv2.dns.manager.domain.exception.IpTypeMismatchException;
@@ -55,6 +56,11 @@ public class DnsRecord extends AggregateRoot<DnsRecordID> implements EventCarrie
         // TODO implement validation
     }
 
+    @Override
+    public Optional<Event<?>> dequeueEvent() {
+        return Optional.ofNullable(this.events.poll());
+    }
+
     public DnsRecordName getName() {
         return name;
     }
@@ -73,8 +79,11 @@ public class DnsRecord extends AggregateRoot<DnsRecordID> implements EventCarrie
 
     public DnsRecord changeIp(final Ip ip) {
 
-        if (ip.getType() != this.getType().getIpType())
-            throw IpTypeMismatchException.with(this.getType().getIpType(), ip.getType());
+        if (ip.getType() != this.getType().getIpType()) {
+            final var e = IpTypeMismatchException.with(this.getType().getIpType(), ip.getType());
+            addEvent(ErrorOccurredEvent.create("dns.manager", ErrorOccurredEvent.Data.of(e)));
+            throw e;
+        }
 
         if (this.getIp().equals(ip))
             return this;
@@ -83,7 +92,7 @@ public class DnsRecord extends AggregateRoot<DnsRecordID> implements EventCarrie
 
         this.updatedAt = Instant.now();
 
-        this.events.add(
+        addEvent(
                 DnsRecordIpChangedEvent.create(
                         "dns.manager",
                         DnsRecordIpChangedEvent.Data.of(
@@ -95,9 +104,8 @@ public class DnsRecord extends AggregateRoot<DnsRecordID> implements EventCarrie
         return this;
     }
 
-    @Override
-    public Optional<Event<?>> dequeueEvent() {
-        return Optional.ofNullable(this.events.poll());
+    private void addEvent(final Event<?> event) {
+        this.events.add(event);
     }
 
 }

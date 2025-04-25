@@ -37,8 +37,10 @@ public class EventDispatcher {
 
     public void notify(final EventCarrier carrier) {
         var event = carrier.dequeueEvent();
-        while (event.isPresent())
+        while (event.isPresent()) {
             notify(event.get());
+            event = carrier.dequeueEvent();
+        }
     }
 
 }

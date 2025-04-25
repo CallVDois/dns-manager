@@ -46,8 +46,14 @@ public class SynchronizeDnsRecordUseCase extends UnitUseCase<SynchronizeDnsRecor
         if (dnsRecord.getIp().equals(currentPublicIP))
             return;
 
-        this.dnsRecordGateway.update(dnsRecord.changeIp(currentPublicIP));
-        eventDispatcher.notify(dnsRecord);
+        try {
+            this.dnsRecordGateway.update(dnsRecord.changeIp(currentPublicIP));
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            eventDispatcher.notify(dnsRecord);
+        }
+
     }
 
     private Ip localHostIp(final IpType ipType) {
