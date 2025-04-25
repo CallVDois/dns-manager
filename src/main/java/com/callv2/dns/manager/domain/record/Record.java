@@ -1,19 +1,23 @@
 package com.callv2.dns.manager.domain.record;
 
 import java.time.Instant;
+import java.util.Optional;
+import java.util.Queue;
 
 import com.callv2.dns.manager.domain.AggregateRoot;
+import com.callv2.dns.manager.domain.event.Event;
+import com.callv2.dns.manager.domain.event.EventCarrier;
 import com.callv2.dns.manager.domain.exception.IpTypeMismatchException;
 import com.callv2.dns.manager.domain.validation.ValidationHandler;
 
-public class Record extends AggregateRoot<RecordID> {
+public class Record extends AggregateRoot<RecordID> implements EventCarrier {
 
     private final RecordName name;
     private final RecordType type;
-
     private Ip ipId;
-
     private Instant updatedAt;
+
+    private Queue<Event<?>> events;
 
     public Record(
             final RecordID id,
@@ -46,6 +50,7 @@ public class Record extends AggregateRoot<RecordID> {
 
     @Override
     public void validate(final ValidationHandler handler) {
+        // TODO implement validation
     }
 
     public RecordName getName() {
@@ -69,11 +74,28 @@ public class Record extends AggregateRoot<RecordID> {
         if (ip.getType() != this.getType().getIpType())
             throw IpTypeMismatchException.with(this.getType().getIpType(), ip.getType());
 
+        if (this.getIp().equals(ip))
+            return this;
+
         this.ipId = ip;
 
         this.updatedAt = Instant.now();
 
+        this.events.add(
+                RecordChangedEvent.create(
+                        "dns.manager",
+                        RecordChangedEvent.Data.of(
+                                this.getName().value(),
+                                this.getType().getValue(),
+                                this.getIp().getValue(),
+                                ip.getValue())));
+
         return this;
+    }
+
+    @Override
+    public Optional<Event<?>> dequeueEvent() {
+        return Optional.ofNullable(this.events.poll());
     }
 
 }

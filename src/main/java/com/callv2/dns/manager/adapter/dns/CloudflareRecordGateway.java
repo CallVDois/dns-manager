@@ -1,22 +1,20 @@
 package com.callv2.dns.manager.adapter.dns;
 
-import com.callv2.dns.manager.adapter.notification.DiscordWebhookNotifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.callv2.dns.manager.adapter.cloudflare.CloudflareDnsManagerClient;
-import com.callv2.dns.manager.domain.dns.DNS;
-import com.callv2.dns.manager.domain.dns.DNSGateway;
-import com.callv2.dns.manager.domain.record.Ip;
+import com.callv2.dns.manager.adapter.notification.DiscordWebhookNotifier;
+import com.callv2.dns.manager.domain.record.RecordGateway;
 
 @Component
 @Profile({ "cloudflare" })
-public class CloudflareDNSGateway implements DNSGateway {
+public class CloudflareRecordGateway implements RecordGateway {
 
     private final CloudflareDnsManagerClient cloudflareDnsManagerClient;
     private final DiscordWebhookNotifier discordWebhookNotifier;
 
-    public CloudflareDNSGateway(
+    public CloudflareRecordGateway(
             final CloudflareDnsManagerClient cloudflareDnsManagerClient,
             final DiscordWebhookNotifier discordWebhookNotifier) {
         this.cloudflareDnsManagerClient = cloudflareDnsManagerClient;
@@ -24,10 +22,17 @@ public class CloudflareDNSGateway implements DNSGateway {
     }
 
     @Override
-    public void updateIP(DNS dns, Ip ip) {
-        this.cloudflareDnsManagerClient.updateDns(dns.value(), dns.type().getValue(), ip.getValue());
+    public void update(final com.callv2.dns.manager.domain.record.Record record) {
+
+        this.cloudflareDnsManagerClient.updateDns(
+                record.getName().value(),
+                record.getType().getValue(),
+                record.getIp().getValue());
+
         discordWebhookNotifier.sendMessage(
-                String.format("🛠️ Registro DNS `%s` atualizado para o IP `%s`.", dns.value(), ip.getValue()));
+                String.format("🛠️ Registro DNS `%s` atualizado para o IP `%s`.",
+                        record.getName().value(),
+                        record.getIp().getValue()));
     }
 
 }
