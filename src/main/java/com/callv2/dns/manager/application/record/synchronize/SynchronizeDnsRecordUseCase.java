@@ -37,13 +37,23 @@ public class SynchronizeDnsRecordUseCase extends UnitUseCase<SynchronizeDnsRecor
 
         final DnsRecord dnsRecord = this.dnsRecordGateway
                 .findById(DnsRecordID.from(DnsRecordName.of(input.dns()), input.type()))
-                .orElseThrow(() -> new IllegalArgumentException("DnsRecord not found"));
+                .orElse(DnsRecord.create(
+                        DnsRecordID.from(DnsRecordName.of(input.dns()), input.type()),
+                        DnsRecordName.of(input.dns()),
+                        input.type(),
+                        localHostIp(input.type().getIpType())));
 
         if (dnsRecord.getIp().equals(currentPublicIP))
             return;
 
         this.dnsRecordGateway.update(dnsRecord.changeIp(currentPublicIP));
         eventDispatcher.notify(dnsRecord);
+    }
+
+    private Ip localHostIp(final IpType ipType) {
+        return IpType.IPV4.equals(ipType)
+                ? Ip.fromIpv4("127.0.0.1")
+                : Ip.fromIpv6("::1");
     }
 
 }

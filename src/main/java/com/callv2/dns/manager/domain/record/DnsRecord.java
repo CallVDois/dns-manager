@@ -30,6 +30,8 @@ public class DnsRecord extends AggregateRoot<DnsRecordID> implements EventCarrie
         this.type = type;
         this.ipId = ipId;
         this.updatedAt = updatedAt;
+
+        this.events = new java.util.LinkedList<>();
     }
 
     public static DnsRecord of(

@@ -1,18 +1,16 @@
 package com.callv2.dns.manager.domain.event;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class EventDispatcher {
 
     private final ConcurrentHashMap<String, List<EventHandler<?>>> handlers = new ConcurrentHashMap<>();
 
-    public void register(final Event<?> event, final EventHandler<?> handler) {
-        this.handlers.computeIfAbsent(event.name(), k -> List.of()).add(handler);
+    public void register(final EventHandler<?> handler) {
+        this.handlers.computeIfAbsent(handler.eventName(), k -> new ArrayList<>()).add(handler);
     }
 
     public void unregister(final Event<?> event, final EventHandler<?> handler) {
