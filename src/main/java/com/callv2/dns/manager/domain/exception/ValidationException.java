@@ -8,7 +8,7 @@ import com.callv2.dns.manager.domain.validation.ValidationHandler;
 public class ValidationException extends DomainException {
 
     private ValidationException(final String aMessage, final List<ValidationError> anErrors) {
-        super(aMessage, List.copyOf(anErrors));
+        super(aMessage, List.copyOf(anErrors.stream().map(ValidationError::toDomain).toList()));
     }
 
     public static ValidationException with(final String aMessage, final ValidationHandler aNotification) {

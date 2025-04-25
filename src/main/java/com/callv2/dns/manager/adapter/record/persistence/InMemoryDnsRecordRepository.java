@@ -4,9 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.stereotype.Repository;
+
 import com.callv2.dns.manager.domain.record.DnsRecord;
 import com.callv2.dns.manager.domain.record.DnsRecordID;
 
+@Repository
 public class InMemoryDnsRecordRepository {
 
     private final Map<DnsRecordID, DnsRecord> records = new HashMap<>();
