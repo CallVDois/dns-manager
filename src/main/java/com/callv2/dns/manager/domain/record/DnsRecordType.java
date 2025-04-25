@@ -1,6 +1,6 @@
 package com.callv2.dns.manager.domain.record;
 
-public enum RecordType {
+public enum DnsRecordType {
 
     A(IpType.IPV4, "A"),
     AAAA(IpType.IPV6, "AAAA");
@@ -8,7 +8,7 @@ public enum RecordType {
     private final IpType ipType;
     private final String value;
 
-    RecordType(IpType ipType, String value) {
+    DnsRecordType(IpType ipType, String value) {
         this.ipType = ipType;
         this.value = value;
     }
@@ -21,8 +21,8 @@ public enum RecordType {
         return value;
     }
 
-    public static RecordType fromValue(final String value) {
-        for (RecordType type : RecordType.values())
+    public static DnsRecordType fromValue(final String value) {
+        for (DnsRecordType type : DnsRecordType.values())
             if (type.getValue().equals(value))
                 return type;
 

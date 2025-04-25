@@ -5,11 +5,11 @@ import org.springframework.stereotype.Component;
 
 import com.callv2.dns.manager.adapter.cloudflare.CloudflareDnsManagerClient;
 import com.callv2.dns.manager.adapter.notification.DiscordWebhookNotifier;
-import com.callv2.dns.manager.domain.record.RecordGateway;
+import com.callv2.dns.manager.domain.record.DnsRecordGateway;
 
 @Component
 @Profile({ "cloudflare" })
-public class CloudflareRecordGateway implements RecordGateway {
+public class CloudflareRecordGateway implements DnsRecordGateway {
 
     private final CloudflareDnsManagerClient cloudflareDnsManagerClient;
     private final DiscordWebhookNotifier discordWebhookNotifier;
@@ -22,7 +22,7 @@ public class CloudflareRecordGateway implements RecordGateway {
     }
 
     @Override
-    public void update(final com.callv2.dns.manager.domain.record.Record record) {
+    public void update(final com.callv2.dns.manager.domain.record.DnsRecord record) {
 
         this.cloudflareDnsManagerClient.updateDns(
                 record.getName().value(),
