@@ -6,9 +6,11 @@ import com.callv2.dns.manager.domain.record.DnsRecord;
 import com.callv2.dns.manager.domain.record.DnsRecordGateway;
 import com.callv2.dns.manager.domain.record.DnsRecordID;
 import com.callv2.dns.manager.domain.record.DnsRecordName;
+import com.callv2.dns.manager.domain.record.DnsRecordType;
 import com.callv2.dns.manager.domain.record.Ip;
 import com.callv2.dns.manager.domain.record.IpGateway;
 import com.callv2.dns.manager.domain.record.IpType;
+import com.callv2.dns.manager.domain.validation.handler.Notification;
 
 public class SynchronizeDnsRecordUseCase extends UnitUseCase<SynchronizeDnsRecordInput> {
 
@@ -29,28 +31,34 @@ public class SynchronizeDnsRecordUseCase extends UnitUseCase<SynchronizeDnsRecor
     @Override
     public void execute(final SynchronizeDnsRecordInput input) {
 
+        final DnsRecordType dnsRecordType = input.type();
+        final DnsRecordName dnsRecordName = DnsRecordName.of(input.dns());
+        final DnsRecordID dnsRecordID = DnsRecordID.from(dnsRecordName, dnsRecordType);
         final IpType ipType = input.type().getIpType();
+
         final Ip currentPublicIP = this.ipGateway.findPublicIp(ipType);
 
         final DnsRecord dnsRecord = this.dnsRecordGateway
-                .findById(DnsRecordID.from(DnsRecordName.of(input.dns()), input.type()))
+                .findById(dnsRecordID)
                 .orElse(DnsRecord.create(
-                        DnsRecordID.from(DnsRecordName.of(input.dns()), input.type()),
-                        DnsRecordName.of(input.dns()),
+                        dnsRecordID,
+                        dnsRecordName,
                         input.type(),
-                        localHostIp(input.type().getIpType())));
+                        localHostIp(ipType)));
 
         if (dnsRecord.getIp().equals(currentPublicIP))
             return;
 
-        try {
-            this.dnsRecordGateway.update(dnsRecord.changeIp(currentPublicIP));
-        } catch (Exception e) {
-            throw e;
-        } finally {
+        final Notification notification = Notification.create();
+        notification.validate(() -> dnsRecord.changeIp(currentPublicIP));
+
+        if (notification.hasError()) {
             eventDispatcher.notify(dnsRecord);
+            return;
         }
 
+        this.dnsRecordGateway.update(dnsRecord);
+        eventDispatcher.notify(dnsRecord);
     }
 
     private Ip localHostIp(final IpType ipType) {

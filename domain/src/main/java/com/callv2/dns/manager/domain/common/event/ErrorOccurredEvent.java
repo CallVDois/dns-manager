@@ -30,6 +30,10 @@ public record ErrorOccurredEvent(
 
     public record Data(String message, List<String> errors) {
 
+        public static Data of(final String message, final List<DomainException.Error> errors) {
+            return new Data(message, errors.stream().map(DomainException.Error::message).toList());
+        }
+
         public static Data of(final DomainException cause) {
             return new Data(cause.getMessage(),
                     cause.getErrors().stream().map(DomainException.Error::message).toList());

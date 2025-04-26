@@ -27,7 +27,7 @@ public class Ip extends Entity<IpID> {
 
     @Override
     public void validate(ValidationHandler handler) {
-        // TODO Auto-generated method stub
+        new IpValidator(handler, this).validate();
     }
 
     public String getValue() {

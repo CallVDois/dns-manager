@@ -81,7 +81,9 @@ public class DnsRecord extends AggregateRoot<DnsRecordID> implements EventCarrie
 
         if (ip.getType() != this.getType().getIpType()) {
             final var e = IpTypeMismatchException.with(this.getType().getIpType(), ip.getType());
-            addEvent(ErrorOccurredEvent.create("dns.manager", ErrorOccurredEvent.Data.of(e)));
+            addEvent(ErrorOccurredEvent.create(
+                    "dns.manager",
+                    ErrorOccurredEvent.Data.of("Registro DNS '%s'".formatted(this.getName().value()), e.getErrors())));
             throw e;
         }
 
