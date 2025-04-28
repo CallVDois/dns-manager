@@ -1,12 +1,8 @@
 package com.callv2.dns.manager.infrastructure.external.discord;
 
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
 public class DiscordWebhookNotifier {
@@ -18,59 +14,42 @@ public class DiscordWebhookNotifier {
     }
 
     public void sendMessage(String message) {
-        if (!isValidDiscordWebhookUrl(webhookUrl))
-            return;
+
+        if (!isValidDiscordWebhookUrl(webhookUrl)) {
+            throw new IllegalArgumentException("Invalid Discord webhook URL");
+        }
 
         try {
-            HttpURLConnection connection = openConnection(webhookUrl);
-            String jsonPayload = buildJsonPayload(message);
-
-            sendPayload(connection, jsonPayload);
-            validateResponse(connection);
-
+            WebClient.create()
+            .post()
+            .uri(webhookUrl)
+            .header("Content-Type", "application/json")
+            .bodyValue("{\"content\": \"" + message + "\"}")
+            .retrieve()
+            .bodyToMono(String.class)
+            .subscribe();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to send message to Discord webhook", e);
         }
     }
 
     private boolean isValidDiscordWebhookUrl(String url) {
-        try {
-            URI uri = new URI(url);
-            String host = uri.getHost();
-            String path = uri.getPath();
-
-            return host != null &&
-                    (host.equals("discord.com") || host.equals("discordapp.com")) &&
-                    path != null &&
-                    path.startsWith("/api/webhooks/");
-        } catch (Exception e) {
-            return false;
+        
+        if (url != null && url.startsWith("https://discord.com/api/webhooks/")) {
+            try {
+                WebClient.create()
+                .get()
+                .uri(url)
+                .header("Content-Type", "application/json")
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
         }
+        return false;
     }
 
-    private HttpURLConnection openConnection(String url) throws Exception {
-        URI webhook = new URI(url);
-        HttpURLConnection connection = (HttpURLConnection) webhook.toURL().openConnection();
-        connection.setRequestMethod("POST");
-        connection.setDoOutput(true);
-        connection.addRequestProperty("Content-Type", "application/json");
-        return connection;
-    }
-
-    private String buildJsonPayload(String message) {
-        return String.format("{\"content\": \"%s\"}", message.replace("\"", "\\\""));
-    }
-
-    private void sendPayload(HttpURLConnection connection, String payload) throws Exception {
-        try (OutputStream os = connection.getOutputStream()) {
-            os.write(payload.getBytes(StandardCharsets.UTF_8));
-        }
-    }
-
-    private void validateResponse(HttpURLConnection connection) throws Exception {
-        int responseCode = connection.getResponseCode();
-        if (responseCode != 204) {
-            System.err.println("Falha ao enviar webhook. Código: " + responseCode);
-        }
-    }
 }
