@@ -26,7 +26,7 @@ public class IpifyIpGateway implements IpGateway {
             return Ip.fromIpv4(ipRetriever.retrievePublicIPV4().ip());
 
         if (IpType.IPV6.equals(type))
-            return Ip.fromIpv4(ipRetriever.retrievePublicIPV6().ip());
+            return Ip.fromIpv6(ipRetriever.retrievePublicIPV6().ip());
 
         throw new IllegalArgumentException();
     }
