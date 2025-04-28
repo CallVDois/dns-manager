@@ -1,10 +1,9 @@
 package com.callv2.dns.manager.infrastructure.external.cloudflare;
 
-import java.util.Map;
-
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.callv2.dns.manager.infrastructure.external.cloudflare.model.ListDNSResponse;
+import com.callv2.dns.manager.infrastructure.external.cloudflare.model.UpdateDnsRecordRequest;
 
 public class CloudflareDnsManagerClient {
 
@@ -29,7 +28,7 @@ public class CloudflareDnsManagerClient {
                             .patch()
                             .uri("/client/v4/zones/{zoneId}/dns_records/{recordId}", this.zoneId, record.id())
                             .header("Authorization", "Bearer " + this.token)
-                            .bodyValue(Map.of("content", ip))
+                            .bodyValue(UpdateDnsRecordRequest.ofContent(ip))
                             .retrieve()
                             .bodyToMono(String.class)
                             .block();
