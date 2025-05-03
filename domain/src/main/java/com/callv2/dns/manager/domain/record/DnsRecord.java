@@ -15,7 +15,7 @@ public class DnsRecord extends AggregateRoot<DnsRecordID> implements EventCarrie
 
     private final DnsRecordName name;
     private final DnsRecordType type;
-    private Ip ipId;
+    private Ip ip;
     private Instant updatedAt;
 
     private Queue<Event<?>> events;
@@ -29,7 +29,7 @@ public class DnsRecord extends AggregateRoot<DnsRecordID> implements EventCarrie
         super(id);
         this.name = name;
         this.type = type;
-        this.ipId = ipId;
+        this.ip = ipId;
         this.updatedAt = updatedAt;
 
         this.events = new java.util.LinkedList<>();
@@ -70,7 +70,7 @@ public class DnsRecord extends AggregateRoot<DnsRecordID> implements EventCarrie
     }
 
     public Ip getIp() {
-        return ipId;
+        return ip;
     }
 
     public Instant getUpdatedAt() {
@@ -90,7 +90,7 @@ public class DnsRecord extends AggregateRoot<DnsRecordID> implements EventCarrie
         if (this.getIp().equals(ip))
             return this;
 
-        this.ipId = ip;
+        this.ip = ip;
 
         this.updatedAt = Instant.now();
 
