@@ -17,6 +17,14 @@ public class Ip extends Entity<IpID> {
         this.type = type;
     }
 
+    public static Ip localhostIpv6() {
+        return fromIpv6("::1");
+    }
+
+    public static Ip localhostIpv4() {
+        return fromIpv4("127.0.0.1");
+    }
+
     public static Ip fromIpv6(final String value) {
         return new Ip(IpID.from(value), value, IpType.IPV6);
     }

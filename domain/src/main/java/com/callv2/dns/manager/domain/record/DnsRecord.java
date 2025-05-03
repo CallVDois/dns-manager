@@ -1,6 +1,5 @@
 package com.callv2.dns.manager.domain.record;
 
-import java.time.Instant;
 import java.util.Optional;
 import java.util.Queue;
 
@@ -16,21 +15,18 @@ public class DnsRecord extends AggregateRoot<DnsRecordID> implements EventCarrie
     private final DnsRecordName name;
     private final DnsRecordType type;
     private Ip ip;
-    private Instant updatedAt;
 
     private Queue<Event<?>> events;
 
-    public DnsRecord(
+    private DnsRecord(
             final DnsRecordID id,
             final DnsRecordName name,
             final DnsRecordType type,
-            final Ip ipId,
-            final Instant updatedAt) {
+            final Ip ipId) {
         super(id);
         this.name = name;
         this.type = type;
         this.ip = ipId;
-        this.updatedAt = updatedAt;
 
         this.events = new java.util.LinkedList<>();
     }
@@ -38,17 +34,24 @@ public class DnsRecord extends AggregateRoot<DnsRecordID> implements EventCarrie
     public static DnsRecord of(
             final DnsRecordName recordName,
             final DnsRecordType recordType,
-            final Ip ip,
-            final Instant updatedAt) {
-        return new DnsRecord(DnsRecordID.from(recordName, recordType), recordName, recordType, ip, updatedAt);
+            final Ip ip) {
+        return new DnsRecord(
+                DnsRecordID.from(recordName, recordType),
+                recordName,
+                recordType,
+                ip);
     }
 
     public static DnsRecord create(
-            final DnsRecordID id,
             final DnsRecordName recordName,
-            final DnsRecordType recordType,
-            final Ip ip) {
-        return new DnsRecord(id, recordName, recordType, ip, Instant.now());
+            final DnsRecordType recordType) {
+        return new DnsRecord(
+                DnsRecordID.from(recordName, recordType),
+                recordName,
+                recordType,
+                IpType.IPV4.equals(recordType.getIpType())
+                        ? Ip.localhostIpv4()
+                        : Ip.localhostIpv6());
     }
 
     @Override
@@ -73,10 +76,6 @@ public class DnsRecord extends AggregateRoot<DnsRecordID> implements EventCarrie
         return ip;
     }
 
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
     public DnsRecord changeIp(final Ip ip) {
 
         if (ip.getType() != this.getType().getIpType()) {
@@ -91,8 +90,6 @@ public class DnsRecord extends AggregateRoot<DnsRecordID> implements EventCarrie
             return this;
 
         this.ip = ip;
-
-        this.updatedAt = Instant.now();
 
         addEvent(
                 DnsRecordIpChangedEvent.create(

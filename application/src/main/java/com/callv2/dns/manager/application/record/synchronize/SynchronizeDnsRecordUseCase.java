@@ -40,11 +40,7 @@ public class SynchronizeDnsRecordUseCase extends UnitUseCase<SynchronizeDnsRecor
 
         final DnsRecord dnsRecord = this.dnsRecordGateway
                 .findById(dnsRecordID)
-                .orElse(DnsRecord.create(
-                        dnsRecordID,
-                        dnsRecordName,
-                        input.type(),
-                        localHostIp(ipType)));
+                .orElse(DnsRecord.create(dnsRecordName, input.type()));
 
         if (dnsRecord.getIp().equals(currentPublicIP))
             return;
@@ -59,12 +55,6 @@ public class SynchronizeDnsRecordUseCase extends UnitUseCase<SynchronizeDnsRecor
 
         this.dnsRecordGateway.update(dnsRecord);
         eventDispatcher.notify(dnsRecord);
-    }
-
-    private Ip localHostIp(final IpType ipType) {
-        return IpType.IPV4.equals(ipType)
-                ? Ip.fromIpv4("127.0.0.1")
-                : Ip.fromIpv6("::1");
     }
 
 }
