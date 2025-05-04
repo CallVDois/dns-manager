@@ -1,7 +1,10 @@
 package com.callv2.dns.manager.domain.record;
 
 import com.callv2.dns.manager.domain.Entity;
+import com.callv2.dns.manager.domain.exception.DomainException;
+import com.callv2.dns.manager.domain.validation.ValidationError;
 import com.callv2.dns.manager.domain.validation.ValidationHandler;
+import com.callv2.dns.manager.domain.validation.handler.Notification;
 
 public class Ip extends Entity<IpID> {
 
@@ -15,6 +18,8 @@ public class Ip extends Entity<IpID> {
         super(id);
         this.value = value;
         this.type = type;
+
+        this.validate(Notification.create());
     }
 
     public static Ip localhostIpv6() {
@@ -36,6 +41,11 @@ public class Ip extends Entity<IpID> {
     @Override
     public void validate(ValidationHandler handler) {
         new IpValidator(handler, this).validate();
+
+        if (handler.hasError())
+            throw DomainException.with(
+                    "An error occurred while instantiating a new IP",
+                    handler.getErrors().stream().map(ValidationError::toDomain).toList());
     }
 
     public String getValue() {

@@ -7,16 +7,16 @@ import java.util.UUID;
 import com.callv2.dns.manager.domain.event.Event;
 import com.callv2.dns.manager.domain.exception.DomainException;
 
-public record ErrorOccurredEvent(
+public record DomainErrorOccurredEvent(
         String id,
         String source,
-        ErrorOccurredEvent.Data data,
-        Instant generatedAt) implements Event<ErrorOccurredEvent.Data> {
+        DomainErrorOccurredEvent.Data data,
+        Instant generatedAt) implements Event<DomainErrorOccurredEvent.Data> {
 
     private static final String NAME = "domain.error.occurred";
 
-    public static ErrorOccurredEvent create(final String source, final ErrorOccurredEvent.Data data) {
-        return new ErrorOccurredEvent(
+    public static DomainErrorOccurredEvent create(final String source, final DomainErrorOccurredEvent.Data data) {
+        return new DomainErrorOccurredEvent(
                 UUID.randomUUID().toString(),
                 source,
                 data,

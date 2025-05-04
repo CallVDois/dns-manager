@@ -42,7 +42,7 @@ public class IpValidator extends Validator {
 
         String[] parts = ip.getValue().split("\\.");
         if (parts.length != 4) {
-            validationHandler().append(ValidationError.with("Invalid IPv4 format"));
+            validationHandler().append(ValidationError.with("Invalid IPv4 format %s".formatted(ip.getValue())));
             return;
         }
 
@@ -65,7 +65,7 @@ public class IpValidator extends Validator {
 
         String[] parts = ip.getValue().split(":");
         if (parts.length < 3 || parts.length > 8) {
-            validationHandler().append(ValidationError.with("Invalid IPv6 format"));
+            validationHandler().append(ValidationError.with("Invalid IPv6 format %s".formatted(ip.getValue())));
             return;
         }
 

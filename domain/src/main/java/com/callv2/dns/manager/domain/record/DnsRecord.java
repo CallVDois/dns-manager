@@ -4,7 +4,7 @@ import java.util.Optional;
 import java.util.Queue;
 
 import com.callv2.dns.manager.domain.AggregateRoot;
-import com.callv2.dns.manager.domain.common.event.ErrorOccurredEvent;
+import com.callv2.dns.manager.domain.common.event.DomainErrorOccurredEvent;
 import com.callv2.dns.manager.domain.event.Event;
 import com.callv2.dns.manager.domain.event.EventCarrier;
 import com.callv2.dns.manager.domain.exception.IpTypeMismatchException;
@@ -80,9 +80,9 @@ public class DnsRecord extends AggregateRoot<DnsRecordID> implements EventCarrie
 
         if (ip.getType() != this.getType().getIpType()) {
             final var e = IpTypeMismatchException.with(this.getType().getIpType(), ip.getType());
-            addEvent(ErrorOccurredEvent.create(
+            addEvent(DomainErrorOccurredEvent.create(
                     "dns.manager",
-                    ErrorOccurredEvent.Data.of("Registro DNS '%s'".formatted(this.getName().value()), e.getErrors())));
+                    DomainErrorOccurredEvent.Data.of("Registro DNS '%s'".formatted(this.getName().value()), e.getErrors())));
             throw e;
         }
 

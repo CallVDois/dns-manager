@@ -15,8 +15,8 @@ public class DomainException extends NoStacktraceException {
         return new DomainException(error.message(), List.of(error));
     }
 
-    public static DomainException with(final List<DomainException.Error> errors) {
-        return new DomainException("", errors);
+    public static DomainException with(final String message, final List<DomainException.Error> errors) {
+        return new DomainException(message, errors);
     }
 
     public List<DomainException.Error> getErrors() {

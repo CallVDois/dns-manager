@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import com.callv2.dns.manager.domain.common.event.ErrorOccurredEvent;
+import com.callv2.dns.manager.domain.common.event.DomainErrorOccurredEvent;
 import com.callv2.dns.manager.domain.exception.IpTypeMismatchException;
 
 class DnsRecordTest {
@@ -111,7 +111,7 @@ class DnsRecordTest {
     @Test
     void givenADiffrentIpType_whenCallsChangeIp_shouldThrowIpTypeMismatchException() {
 
-        final var expectedEventType = ErrorOccurredEvent.class;
+        final var expectedEventType = DomainErrorOccurredEvent.class;
 
         final var expectedIp = Ip.localhostIpv6();
         final var expectedName = DnsRecordName.of("example.com");
