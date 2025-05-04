@@ -46,7 +46,7 @@ public class SynchronizeDnsRecordUseCase extends UnitUseCase<SynchronizeDnsRecor
         if (notification.hasError()) {
             eventDispatcher.notify(DomainErrorOccurredEvent.create("dns.manager",
                     DomainErrorOccurredEvent.Data.of(DomainException
-                            .with("An error occured on findPublicIp",
+                            .with("An error occurred on findPublicIp",
                                     notification.getErrors().stream().map(ValidationError::toDomain).toList()))));
             return;
         }
