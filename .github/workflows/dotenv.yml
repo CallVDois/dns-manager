@@ -63,21 +63,21 @@ jobs:
         run: |
             ls -la
 
-      - name: Transfer .env via SCP
-        run: |
-          scp -i ${{ secrets.DEPLOY_KEY }} \
-            -P ${{ secrets.DEPLOY_PORT }} \
-            .env \
-            ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}
+      # - name: Transfer .env via SCP
+      #   run: |
+      #     scp -i ${{ secrets.DEPLOY_KEY }} \
+      #       -P ${{ secrets.DEPLOY_PORT }} \
+      #       .env \
+      #       ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}
 
-      # - name: rsync
-      #   uses: burnett01/rsync-deployments@7.0.2
-      #   with:
-      #     switches: -avzr --delete
-      #     path: ./.env
-      #     remote_path: ${{ secrets.DEPLOY_PATH }}
-      #     remote_host: ${{ secrets.DEPLOY_HOST }}
-      #     remote_port: ${{ secrets.DEPLOY_PORT }}
-      #     remote_user: ${{ secrets.DEPLOY_USER }}
-      #     remote_key: ${{ secrets.DEPLOY_KEY }}
+      - name: Transfer .env via rsync
+        uses: burnett01/rsync-deployments@7.0.2
+        with:
+          switches: -avz --delete
+          path: .env
+          remote_path: ${{ secrets.DEPLOY_PATH }}
+          remote_host: ${{ secrets.DEPLOY_HOST }}
+          remote_port: ${{ secrets.DEPLOY_PORT }}
+          remote_user: ${{ secrets.DEPLOY_USER }}
+          remote_key: ${{ secrets.DEPLOY_KEY }}
       
