@@ -12,6 +12,7 @@ jobs:
     with:
       dnsProvider: cloudflare
       dnsUpdateDelay: 600000
+    secrets:
       CLOUDFLARE_API_TOKEN: test
       CLOUDFLARE_ZONE_ID: test
       A_DNS_LIST: test1.com,test2.com
