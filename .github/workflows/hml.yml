@@ -19,7 +19,7 @@ jobs:
       A_DNS_LIST: test1.com,test2.com
       AAAA_DNS_LIST: ip6.test1.com,ip6.test2.com
       WEBHOOK_URL: ${{ secrets.HML_WEBHOOK_URL }}
-      DEPLOY_PATH: /home/deploy/
+      DEPLOY_PATH: /home/deploy/dns-manager/
       DEPLOY_HOST: ${{ secrets.HML_SERVER_HOST }}
       DEPLOY_PORT: ${{ secrets.HML_SERVER_SSH_PORT }}
       DEPLOY_USER: ${{ secrets.HML_DEPLOY_USER }}
