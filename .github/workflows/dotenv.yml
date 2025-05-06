@@ -50,6 +50,9 @@ jobs:
             WEBHOOK_URL=${{ secrets.WEBHOOK_URL }}
             EOT
 
+      - name: Test
+        run: |
+            ls -l
 
       - name: rsync
         uses: burnett01/rsync-deployments@7.0.2
