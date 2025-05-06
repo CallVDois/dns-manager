@@ -63,6 +63,13 @@ jobs:
         run: |
             ls -la
 
+      - name: Transfer .env via SCP
+        run: |
+          scp -i ${{ secrets.DEPLOY_KEY }} \
+            -P ${{ secrets.DEPLOY_PORT }} \
+            .env \
+            ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}
+
       # - name: rsync
       #   uses: burnett01/rsync-deployments@7.0.2
       #   with:
