@@ -37,7 +37,7 @@ on:
 
 jobs:
   environment:
-    runs-on: [self-hosted, Linux, X64]
+    runs-on: [self-hosted, Linux, X64, hml]
     steps:
 
       - name: Print before directory (for debugging)
