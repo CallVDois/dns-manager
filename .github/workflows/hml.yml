@@ -10,6 +10,7 @@ jobs:
   gen-dotenv:
     uses: ./.github/workflows/dotenv.yml
     with:
+      flags: "-6"
       dnsProvider: cloudflare
       dnsUpdateDelay: 600000
     secrets:

@@ -3,6 +3,10 @@ name: Create and trasnfer env
 on:
   workflow_call:
     inputs:
+      flags:
+        description: 'Flags to pass to the script'
+        required: false
+        type: string
       dnsProvider:
         type: string
         default: cloudflare
@@ -73,7 +77,7 @@ jobs:
       - name: Transfer .env via rsync
         uses: burnett01/rsync-deployments@7.0.2
         with:
-          switches: -avz --delete
+          switches: ${{ inputs.flags }}
           path: .env
           remote_path: ${{ secrets.DEPLOY_PATH }}
           remote_host: ${{ secrets.DEPLOY_HOST }}
