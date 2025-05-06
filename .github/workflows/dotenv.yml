@@ -57,8 +57,8 @@ jobs:
           switches: -avzr --delete
           path: /.env
           remote_path: ${{ secrets.DEPLOY_PATH }}
-          remote_host: hml.callv2.com
-          remote_port: 22
+          remote_host: ${{ secrets.DEPLOY_HOST }}
+          remote_port: ${{ secrets.DEPLOY_PORT }}
           remote_user: ${{ secrets.DEPLOY_USER }}
-          remote_key: ${{ secrets.DEPLOY_USER }}
+          remote_key: ${{ secrets.DEPLOY_KEY }}
       
