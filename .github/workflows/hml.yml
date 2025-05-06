@@ -1,0 +1,28 @@
+name: HML Deploy
+
+on:
+  push:
+    branches:
+      - feature/github-actions
+
+jobs:
+
+  environment:
+    runs-on: [ self-hosted, deploy ]
+
+  env:
+    uses: ./.github/workflows/dotenv.yml
+    with:
+      dnsProvider: cloudflare
+      dnsUpdateDelay: 600000
+    secrets: 
+      CLOUDFLARE_API_TOKEN: test
+      CLOUDFLARE_ZONE_ID: test
+      A_DNS_LIST: test1.com,test2.com
+      AAAA_DNS_LIST: ip6.test1.com,ip6.test2.com
+      WEBHOOK_URL: ${{ secrets.HML_WEBHOOK_URL }}
+      DEPLOY_PATH: ${{ secrets.HML_DEPLOY_FOLDER }}/dns-manager/
+      DEPLOY_HOST: ${{ secrets.HML_SERVER_HOST }}
+      DEPLOY_PORT: ${{ secrets.HML_SERVER_SSH_PORT }}
+      DEPLOY_USER: ${{ secrets.HML_DEPLOY_USER }}
+      DEPLOY_KEY: ${{ secrets.SECRET_TEST }}

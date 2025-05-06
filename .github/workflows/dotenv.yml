@@ -1,0 +1,65 @@
+name: Create and trasnfer env
+
+on:
+  workflow_call:
+    inputs:
+      dnsProvider:
+        type: string
+        default: cloudflare
+      dnsUpdateDelay:
+        type: number
+        default: 600000
+    secrets:
+      CLOUDFLARE_API_TOKEN:
+        required: true
+      CLOUDFLARE_ZONE_ID:
+        required: true
+      A_DNS_LIST:
+        required: false
+      AAAA_DNS_LIST:
+        required: false
+      WEBHOOK_URL:
+        required: false
+      DEPLOY_PATH:
+        required: true
+      DEPLOY_HOST:
+        required: true
+      DEPLOY_PORT:
+        required: true
+      DEPLOY_USER:
+        required: true
+      DEPLOY_KEY:
+        required: true
+
+jobs:
+  environment:
+    runs-on: [ self-hosted, deploy ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Gen .env
+        run: |
+            cat <<EOT > .env
+            DNS_PROVIDER=${{ inputs.dnsProvider }}
+            DNS_UPDATE_DELAY_MS=${{ inputs.dnsUpdateDelay }}
+            CLOUDFLARE_API_TOKEN=${{ secrets.CLOUDFLARE_API_TOKEN }}
+            CLOUDFLARE_ZONE_ID=${{ secrets.CLOUDFLARE_ZONE_ID }}
+            A_DNS_LIST=${{ secrets.A_DNS_LIST }}
+            AAAA_DNS_LIST=${{ secrets.AAAA_DNS_LIST }}
+            WEBHOOK_URL=${{ secrets.WEBHOOK_URL }}
+            EOT
+
+
+      - name: rsync
+        uses: burnett01/rsync-deployments@7.0.2
+        with:
+          switches: -avzr --delete
+          path: /.env
+          remote_path: ${{ secrets.DEPLOY_PATH }}
+          remote_host: ${{ secrets.DEPLOY_HOST }}
+          remote_port: ${{ secrets.DEPLOY_PORT }}
+          remote_user: ${{ secrets.DEPLOY_USER }}
+          remote_key: ${{ secrets.DEPLOY_USER }}
+      
