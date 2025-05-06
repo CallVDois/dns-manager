@@ -35,8 +35,17 @@ jobs:
   environment:
     runs-on: [self-hosted, Linux, X64]
     steps:
+
+      - name: Print before directory (for debugging)
+        run: |
+          echo "Current directory: $(pwd)"
+
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Print after directory (for debugging)
+        run: |
+          echo "Current directory: $(pwd)"
 
       - name: Gen .env
         run: |
@@ -54,14 +63,14 @@ jobs:
         run: |
             ls -l
 
-      - name: rsync
-        uses: burnett01/rsync-deployments@7.0.2
-        with:
-          switches: -avzr --delete
-          path: /.env
-          remote_path: ${{ secrets.DEPLOY_PATH }}
-          remote_host: ${{ secrets.DEPLOY_HOST }}
-          remote_port: ${{ secrets.DEPLOY_PORT }}
-          remote_user: ${{ secrets.DEPLOY_USER }}
-          remote_key: ${{ secrets.DEPLOY_KEY }}
+      # - name: rsync
+      #   uses: burnett01/rsync-deployments@7.0.2
+      #   with:
+      #     switches: -avzr --delete
+      #     path: ./.env
+      #     remote_path: ${{ secrets.DEPLOY_PATH }}
+      #     remote_host: ${{ secrets.DEPLOY_HOST }}
+      #     remote_port: ${{ secrets.DEPLOY_PORT }}
+      #     remote_user: ${{ secrets.DEPLOY_USER }}
+      #     remote_key: ${{ secrets.DEPLOY_KEY }}
       
