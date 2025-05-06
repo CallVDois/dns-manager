@@ -61,7 +61,7 @@ jobs:
 
       - name: Test
         run: |
-            ls -l
+            ls -la
 
       # - name: rsync
       #   uses: burnett01/rsync-deployments@7.0.2
