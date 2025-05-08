@@ -1,16 +1,15 @@
-name: Develop nightly build & push to Docker Hub
+name: Release build & push to Docker Hub
 
 on:
-  push: 
-    branches:
-      - develop
+  release:
+    types: [published]
 
 jobs:
-  nightly-build-push:
+  release-build-push:
     uses: ./.github/workflows/build-and-push-docker-image.yml
     with:
       imageName: dns-manager
-      imageTag: nightly
+      imageTag: ${{ github.event.release.tag_name }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
