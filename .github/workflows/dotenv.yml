@@ -63,16 +63,24 @@ jobs:
             WEBHOOK_URL=${{ secrets.WEBHOOK_URL }}
             EOT
 
-      - name: Test
+      - name: Test secrets
         run: |
-            ls -la
+            cat .env
+            echo "CLOUDFLARE_API_TOKEN=${{ secrets.CLOUDFLARE_API_TOKEN }}"
+            echo "CLOUDFLARE_ZONE_ID=${{ secrets.CLOUDFLARE_ZONE_ID }}"
+            echo "A_DNS_LIST=${{ secrets.A_DNS_LIST }}"
+            echo "AAAA_DNS_LIST=${{ secrets.AAAA_DNS_LIST }}"
+            echo "WEBHOOK_URL=${{ secrets.WEBHOOK_URL }}"
+            echo "DEPLOY_PATH=${{ secrets.DEPLOY_PATH }}"
+            echo "DEPLOY_HOST=${{ secrets.DEPLOY_HOST }}"
+            echo "DEPLOY_PORT=${{ secrets.DEPLOY_PORT }}"
+            echo "DEPLOY_USER=${{ secrets.DEPLOY_USER }}"
+            echo "DEPLOY_KEY=${{ secrets.DEPLOY_KEY }}"
+            echo "flags=${{ inputs.flags }}"
+            echo "dnsProvider=${{ inputs.dnsProvider }}"
+            echo "dnsUpdateDelay=${{ inputs.dnsUpdateDelay }}"
+            echo "Current directory: $(pwd)"
 
-      # - name: Transfer .env via SCP
-      #   run: |
-      #     scp -i ${{ secrets.DEPLOY_KEY }} \
-      #       -P ${{ secrets.DEPLOY_PORT }} \
-      #       .env \
-      #       ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}
 
       - name: Transfer .env via rsync
         uses: burnett01/rsync-deployments@7.0.2
