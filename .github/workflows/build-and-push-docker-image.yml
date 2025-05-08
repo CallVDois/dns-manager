@@ -3,9 +3,6 @@ name: build-and-push-docker-image
 on:
   workflow_call:
     inputs:
-      runsOn:
-        required: true
-        type: string
       imageName:
         required: true
         type: string
@@ -20,7 +17,7 @@ on:
 
 jobs:
   docker:
-    runs-on: ${{ inputs.runsOn }}
+    runs-on: [self-hosted, Linux, X64]
     steps:
 
       - name: Checkout
