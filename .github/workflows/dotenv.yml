@@ -80,6 +80,7 @@ jobs:
             echo "dnsProvider=${{ inputs.dnsProvider }}"
             echo "dnsUpdateDelay=${{ inputs.dnsUpdateDelay }}"
             echo "Current directory: $(pwd)"
+            cat .env
 
 
       - name: Transfer .env via rsync
